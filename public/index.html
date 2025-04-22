@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Uploader</title>
+</head>
+<body>
+  <h1>Upload an Image</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="image" required />
+    <button type="submit">Upload</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.url) {
+        document.getElementById('result').innerHTML = 
+          `<p>Image URL: <a href="${data.url}" target="_blank">${data.url}</a></p><img src="${data.url}" width="300"/>`;
+      } else {
+        document.getElementById('result').textContent = 'Upload failed.';
+      }
+    });
+  </script>
+</body>
+</html>
